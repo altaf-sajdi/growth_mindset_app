@@ -10,10 +10,18 @@ if 'student_info' not in st.session_state:
 
 # Student Information Input Form
 def show_student_form():
+    # Add GIAIC Initiative header
+    st.markdown("""
+    <div style='text-align: center; background-color: #f0f2f6; padding: 1rem; border-radius: 10px; margin-bottom: 2rem;'>
+        <h1 style='color: #1B6B93;'>GIAIC Initiative</h1>
+        <p style='color: #4A4A4A;'>Governor Initiative for Artificial Intelligence & Computing</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     with st.form("student_info_form"):
         st.markdown("### 👨‍🎓 Student Information Form")
         name = st.text_input("Full Name")
-        student_id = st.text_input("Student ID")
+        student_id = st.text_input("Student ID (8 digits)", max_chars=8)
         class_time = st.selectbox(
             "Class Time",
             ["Friday 09:00 AM - 12:00 PM", "Other"]
@@ -22,14 +30,24 @@ def show_student_form():
             class_time = st.text_input("Enter your class time")
         
         submitted = st.form_submit_button("Start App")
-        if submitted and name and student_id and class_time:
-            return {
-                "name": name,
-                "student_id": student_id,
-                "class_time": class_time
-            }
-        elif submitted:
-            st.error("Please fill in all fields")
+        
+        # Validate student ID
+        is_valid_id = student_id.isdigit() and len(student_id) == 8
+        
+        if submitted:
+            if not name:
+                st.error("Please enter your name")
+            if not is_valid_id:
+                st.error("Student ID must be exactly 8 digits")
+            if not class_time:
+                st.error("Please select your class time")
+            
+            if name and is_valid_id and class_time:
+                return {
+                    "name": name,
+                    "student_id": student_id,
+                    "class_time": class_time
+                }
         return None
 
 # Main app logic
@@ -43,7 +61,7 @@ else:
     st.markdown("""
     <div style='text-align: center; background-color: #f0f2f6; padding: 1rem; border-radius: 10px; margin-bottom: 2rem;'>
         <h1 style='color: #1B6B93;'>GIAIC Initiative</h1>
-        <p style='color: #4A4A4A;'>Presidential Initiative for Artificial Intelligence & Computing</p>
+        <p style='color: #4A4A4A;'>Governor Initiative for Artificial Intelligence & Computing</p>
     </div>
     """, unsafe_allow_html=True)
     
