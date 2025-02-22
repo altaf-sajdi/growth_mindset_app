@@ -1,2 +1,4 @@
 streamlit
-requests 
+requests
+openai
+python-dotenv 
